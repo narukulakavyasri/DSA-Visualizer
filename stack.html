@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stack Visualizer</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to right, #4facfe, #00f2fe);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .stack-container {
+        background: #fff;
+        padding: 30px 40px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        text-align: center;
+        width: 250px;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
+    }
+
+    .stack {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 10px;
+        margin-bottom: 20px;
+        min-height: 200px;
+        border: 2px dashed #ddd;
+        border-radius: 10px;
+        padding: 10px;
+        background: #f9f9f9;
+    }
+
+    .stack-item {
+        background: #4facfe;
+        color: white;
+        padding: 10px 0;
+        border-radius: 50px;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+
+    .stack-item:hover {
+        transform: scale(1.05);
+    }
+
+    button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 10px;
+        background: #00c6ff;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    button:hover {
+        background: #0072ff;
+    }
+
+    input {
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        width: 60px;
+        text-align: center;
+        margin-right: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="stack-container">
+    <h1>Stack Visualizer</h1>
+    <div class="stack" id="stack"></div>
+    <div>
+        <input type="number" id="value" placeholder="Value">
+        <button onclick="pushItem()">Push</button>
+        <button onclick="popItem()">Pop</button>
+    </div>
+</div>
+
+<script>
+    let stack = [];
+    const stackDiv = document.getElementById('stack');
+
+    function renderStack() {
+        stackDiv.innerHTML = '';
+        stack.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'stack-item';
+            div.innerText = item;
+            stackDiv.appendChild(div);
+        });
+    }
+
+    function pushItem() {
+        const value = document.getElementById('value').value;
+        if(value !== '') {
+            stack.push(value);
+            renderStack();
+            document.getElementById('value').value = '';
+        }
+    }
+
+    function popItem() {
+        stack.pop();
+        renderStack();
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Linked List Visualizer</title>
+
+<style>
+    body {
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 14px;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        width: 850px;
+        text-align: center;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .controls {
+        margin-bottom: 15px;
+    }
+
+    input {
+        padding: 10px;
+        width: 160px;
+        border-radius: 8px;
+        border: 2px solid #764ba2;
+        font-size: 14px;
+        outline: none;
+        margin-right: 5px;
+    }
+
+    button {
+        padding: 10px 14px;
+        margin: 4px;
+        border: none;
+        border-radius: 8px;
+        background: #667eea;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #5a67d8;
+        transform: translateY(-2px);
+    }
+
+    .list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 30px 0;
+        flex-wrap: wrap;
+    }
+
+    .node {
+        display: flex;
+        align-items: center;
+        animation: fadeIn 0.4s ease;
+    }
+
+    .data {
+        width: 70px;
+        height: 50px;
+        background: #edf2f7;
+        border: 2px solid #667eea;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .arrow {
+        font-size: 26px;
+        margin: 0 10px;
+        color: #333;
+    }
+
+    .null {
+        font-weight: bold;
+        color: #e53e3e;
+    }
+
+    .info {
+        font-weight: bold;
+        color: #444;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Linked List Visualizer</h1>
+
+    <div class="controls">
+        <input type="number" id="valueInput" placeholder="Enter value">
+        <button onclick="insertHead()">Insert Head</button>
+        <button onclick="insertTail()">Insert Tail</button>
+        <button onclick="deleteHead()">Delete Head</button>
+        <button onclick="deleteTail()">Delete Tail</button>
+    </div>
+
+    <div id="listContainer" class="list"></div>
+
+    <div class="info">Time: O(1), Space: O(1)</div>
+</div>
+
+<script>
+    let linkedList = [];
+
+    function renderList() {
+        const container = document.getElementById("listContainer");
+        container.innerHTML = "";
+
+        if (linkedList.length === 0) {
+            container.innerHTML = "<p class='null'>HEAD → NULL</p>";
+            return;
+        }
+
+        linkedList.forEach((value, index) => {
+            const node = document.createElement("div");
+            node.className = "node";
+
+            const data = document.createElement("div");
+            data.className = "data";
+            data.textContent = value;
+
+            node.appendChild(data);
+
+            if (index < linkedList.length - 1) {
+                const arrow = document.createElement("div");
+                arrow.className = "arrow";
+                arrow.textContent = "→";
+                node.appendChild(arrow);
+            } else {
+                const nullNode = document.createElement("div");
+                nullNode.className = "arrow null";
+                nullNode.textContent = "→ NULL";
+                node.appendChild(nullNode);
+            }
+
+            container.appendChild(node);
+        });
+    }
+
+    function getValue() {
+        const input = document.getElementById("valueInput");
+        const value = input.value;
+        input.value = "";
+        return value === "" ? null : value;
+    }
+
+    function insertHead() {
+        const value = getValue();
+        if (value === null) {
+            alert("Please enter a value!");
+            return;
+        }
+        linkedList.unshift(value);
+        renderList();
+    }
+
+    function insertTail() {
+        const value = getValue();
+        if (value === null) {
+            alert("Please enter a value!");
+            return;
+        }
+        linkedList.push(value);
+        renderList();
+    }
+
+    function deleteHead() {
+        if (linkedList.length === 0) {
+            alert("List is empty!");
+            return;
+        }
+        linkedList.shift();
+        renderList();
+    }
+
+    function deleteTail() {
+        if (linkedList.length === 0) {
+            alert("List is empty!");
+            return;
+        }
+        linkedList.pop();
+        renderList();
+    }
+
+    renderList();
+</script>
+
+</body>
+</html>

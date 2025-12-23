@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Queue Visualizer with Arrows</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #74ebd5, #acb6e5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        text-align: center;
+        width: 600px;
+    }
+
+    h2 {
+        margin-bottom: 15px;
+    }
+
+    .queue-wrapper {
+        position: relative;
+        margin: 30px 0;
+    }
+
+    .queue {
+        display: flex;
+        justify-content: center;
+        min-height: 80px;
+    }
+
+    .cell {
+        width: 60px;
+        height: 60px;
+        border: 2px solid #333;
+        margin: 0 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        background: #f4f4f4;
+        border-radius: 8px;
+        animation: pop 0.3s ease;
+        position: relative;
+    }
+
+    .front-cell {
+        background: #ffcccc;
+    }
+
+    .rear-cell {
+        background: #ccffcc;
+    }
+
+    .arrow {
+        font-size: 20px;
+        font-weight: bold;
+        position: absolute;
+        color: #333;
+    }
+
+    .front-arrow {
+        top: -25px;
+    }
+
+    .rear-arrow {
+        bottom: -25px;
+    }
+
+    .label {
+        font-size: 10px;
+        margin-top: 2px;
+    }
+
+    button {
+        padding: 10px 18px;
+        margin: 5px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        color: white;
+        transition: 0.3s;
+    }
+
+    .enqueue {
+        background: #28a745;
+    }
+
+    .enqueue:hover {
+        background: #218838;
+    }
+
+    .dequeue {
+        background: #dc3545;
+    }
+
+    .dequeue:hover {
+        background: #c82333;
+    }
+
+    .empty {
+        color: #555;
+        font-style: italic;
+    }
+
+    @keyframes pop {
+        from { transform: scale(0.8); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Queue Visualizer</h2>
+
+    <div class="queue-wrapper">
+        <div id="queueContainer" class="queue">
+            <p class="empty">Queue is empty</p>
+        </div>
+    </div>
+
+    <button class="enqueue" onclick="enqueue()">Enqueue</button>
+    <button class="dequeue" onclick="dequeue()">Dequeue</button>
+</div>
+
+<script>
+    let queue = [];
+    const queueContainer = document.getElementById("queueContainer");
+
+    function renderQueue() {
+        queueContainer.innerHTML = "";
+
+        if (queue.length === 0) {
+            queueContainer.innerHTML = "<p class='empty'>Queue is empty</p>";
+            return;
+        }
+
+        queue.forEach((value, index) => {
+            const cell = document.createElement("div");
+            cell.className = "cell";
+
+            if (index === 0) cell.classList.add("front-cell");
+            if (index === queue.length - 1) cell.classList.add("rear-cell");
+
+            cell.innerHTML = value;
+
+            if (index === 0) {
+                const frontArrow = document.createElement("div");
+                frontArrow.className = "arrow front-arrow";
+                frontArrow.innerHTML = "⬇ FRONT";
+                cell.appendChild(frontArrow);
+            }
+
+            if (index === queue.length - 1) {
+                const rearArrow = document.createElement("div");
+                rearArrow.className = "arrow rear-arrow";
+                rearArrow.innerHTML = "⬆ REAR";
+                cell.appendChild(rearArrow);
+            }
+
+            queueContainer.appendChild(cell);
+        });
+    }
+
+    function enqueue() {
+        const value = prompt("Enter value to enqueue:");
+        if (value !== null && value !== "") {
+            queue.push(value);
+            renderQueue();
+        }
+    }
+
+    function dequeue() {
+        if (queue.length === 0) {
+            alert("Queue is empty!");
+            return;
+        }
+        queue.shift();
+        renderQueue();
+    }
+
+    renderQueue();
+</script>
+
+</body>
+</html>

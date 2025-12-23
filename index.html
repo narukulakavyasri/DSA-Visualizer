@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DSA Visualizer</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #fdfbfb, #ebedee);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        width: 900px;
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 36px;
+        margin-bottom: 10px;
+        background: linear-gradient(to right, #f97316, #ec4899, #8b5cf6);
+        background-clip: text;              
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    p {
+        color: #555;
+        margin-bottom: 30px;
+        font-size: 16px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .card {
+        padding: 25px;
+        border-radius: 15px;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s ease;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .card:hover {
+        transform: translateY(-8px) scale(1.03);
+    }
+
+    .linkedlist { background: linear-gradient(135deg, #fb923c, #f97316); }
+    .stack      { background: linear-gradient(135deg, #22c55e, #4ade80); }
+    .queue      { background: linear-gradient(135deg, #38bdf8, #0ea5e9); }
+    .sorting    { background: linear-gradient(135deg, #d946ef, #a855f7); }
+    .bst        { background: linear-gradient(135deg, #14b8a6, #5eead4); }
+
+    .card h2 {
+        margin-bottom: 10px;
+    }
+
+    .card span {
+        font-size: 14px;
+        opacity: 0.9;
+    }
+
+    footer {
+        margin-top: 25px;
+        font-size: 14px;
+        color: #777;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>DSA Visualizer</h1>
+    <p>Select a data structure or algorithm to visualize</p>
+
+    <div class="grid">
+        <div class="card linkedlist" onclick="go('linkedlist.html')">
+            <h2>Linked List</h2>
+            <span>Insert • Delete • Traverse</span>
+        </div>
+
+        <div class="card stack" onclick="go('stack.html')">
+            <h2>Stack</h2>
+            <span>Push • Pop • Peek</span>
+        </div>
+
+        <div class="card queue" onclick="go('queue.html')">
+            <h2>Queue</h2>
+            <span>Enqueue • Dequeue</span>
+        </div>
+
+        <div class="card sorting" onclick="go('sorting.html')">
+            <h2>Sorting</h2>
+            <span>Bubble • Selection • Insertion</span>
+        </div>
+
+        <div class="card bst" onclick="go('bst.html')">
+            <h2>Trees (BST)</h2>
+            <span>Insert • Traverse • Search</span>
+        </div>
+    </div>
+
+    <footer>
+        Interactive Data Structures & Algorithms Visualizer
+    </footer>
+</div>
+
+<script>
+    function go(page) {
+        window.location.href = page;
+    }
+</script>
+
+</body>
+</html>

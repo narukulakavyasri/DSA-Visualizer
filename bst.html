@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BST Visualizer</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f4f7;
+  }
+  h1 {
+    color: #333;
+  }
+  #controls {
+    margin: 20px;
+  }
+  input[type="number"] {
+    padding: 5px;
+    font-size: 16px;
+  }
+  button {
+    padding: 6px 12px;
+    font-size: 16px;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  svg {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-top: 20px;
+  }
+  circle {
+    fill: #4CAF50;
+    stroke: #333;
+    stroke-width: 2px;
+  }
+  text {
+    fill: #fff;
+    font-weight: bold;
+    font-size: 14px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+  line {
+    stroke: #333;
+    stroke-width: 2px;
+    marker-end: url(#arrow);
+  }
+</style>
+</head>
+<body>
+
+<h1>Binary Search Tree (BST) Visualizer</h1>
+<div id="controls">
+  <input type="number" id="value" placeholder="Enter value">
+  <button onclick="insertNode()">Insert Node</button>
+  <button onclick="deleteNode()">Delete Node</button>
+</div>
+
+<svg id="bstCanvas" width="1000" height="500"></svg>
+
+<script>
+class Node {
+  constructor(data) {
+    this.data = data;
+    this.left = null;
+    this.right = null;
+    this.x = 0;
+    this.y = 0;
+  }
+}
+
+class BST {
+  constructor() {
+    this.root = null;
+  }
+
+  insert(data) {
+    this.root = this._insertRec(this.root, data);
+  }
+
+  _insertRec(node, data) {
+    if (node === null) return new Node(data);
+    if (data < node.data) node.left = this._insertRec(node.left, data);
+    else if (data > node.data) node.right = this._insertRec(node.right, data);
+    return node;
+  }
+
+  delete(data) {
+    this.root = this._deleteRec(this.root, data);
+  }
+
+  _deleteRec(node, data) {
+    if (node === null) return node;
+
+    if (data < node.data) node.left = this._deleteRec(node.left, data);
+    else if (data > node.data) node.right = this._deleteRec(node.right, data);
+    else {
+      if (!node.left) return node.right;
+      else if (!node.right) return node.left;
+      node.data = this._minValue(node.right);
+      node.right = this._deleteRec(node.right, node.data);
+    }
+    return node;
+  }
+
+  _minValue(node) {
+    let minv = node.data;
+    while (node.left) {
+      node = node.left;
+      minv = node.data;
+    }
+    return minv;
+  }
+}
+
+const bst = new BST();
+const svg = document.getElementById("bstCanvas");
+
+function insertNode() {
+  const val = parseInt(document.getElementById("value").value);
+  if (!isNaN(val)) {
+    bst.insert(val);
+    drawTree();
+  }
+}
+
+function deleteNode() {
+  const val = parseInt(document.getElementById("value").value);
+  if (!isNaN(val)) {
+    bst.delete(val);
+    drawTree();
+  }
+}
+
+function drawTree() {
+  svg.innerHTML = '';
+  const marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
+  marker.setAttribute("id", "arrow");
+  marker.setAttribute("markerWidth", "10");
+  marker.setAttribute("markerHeight", "10");
+  marker.setAttribute("refX", "10");
+  marker.setAttribute("refY", "3");
+  marker.setAttribute("orient", "auto");
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("d", "M0,0 L0,6 L9,3 z");
+  path.setAttribute("fill", "#333");
+  marker.appendChild(path);
+  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  defs.appendChild(marker);
+  svg.appendChild(defs);
+
+  function traverse(node, x, y, spread) {
+    if (!node) return;
+    node.x = x;
+    node.y = y;
+    if (node.left) {
+      drawLine(x, y, x - spread, y + 80);
+      traverse(node.left, x - spread, y + 80, spread / 1.5);
+    }
+    if (node.right) {
+      drawLine(x, y, x + spread, y + 80);
+      traverse(node.right, x + spread, y + 80, spread / 1.5);
+    }
+    drawNode(node);
+  }
+
+  function drawNode(node) {
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", node.x);
+    circle.setAttribute("cy", node.y);
+    circle.setAttribute("r", 20);
+    svg.appendChild(circle);
+
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", node.x);
+    text.setAttribute("y", node.y);
+    text.textContent = node.data;
+    svg.appendChild(text);
+  }
+
+  function drawLine(x1, y1, x2, y2) {
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", x1);
+    line.setAttribute("y1", y1 + 20);
+    line.setAttribute("x2", x2);
+    line.setAttribute("y2", y2 - 20);
+    line.setAttribute("stroke", "#333");
+    line.setAttribute("stroke-width", "2");
+    line.setAttribute("marker-end", "url(#arrow)");
+    svg.appendChild(line);
+  }
+
+  traverse(bst.root, svg.clientWidth / 2, 40, 200);
+}
+</script>
+
+</body>
+</html>

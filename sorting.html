@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sorting Visualizer</title>
+
+<style>
+    body {
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 15px;
+        width: 900px;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+        text-align: center;
+    }
+
+    h1 {
+        color: #444;
+        margin-bottom: 15px;
+    }
+
+    .controls {
+        margin-bottom: 15px;
+    }
+
+    input {
+        padding: 10px;
+        width: 250px;
+        border-radius: 8px;
+        border: 2px solid #9f7aea;
+        font-size: 14px;
+        outline: none;
+    }
+
+    button {
+        padding: 10px 15px;
+        margin: 5px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        color: white;
+        transition: 0.3s;
+    }
+
+    .generate { background: #48bb78; }
+    .bubble { background: #ed8936; }
+    .selection { background: #9f7aea; }
+    .insertion { background: #38b2ac; }
+
+    button:hover {
+        opacity: 0.85;
+        transform: translateY(-2px);
+    }
+
+    .array-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        height: 300px;
+        margin-top: 25px;
+    }
+
+    .bar {
+        margin: 0 4px;
+        width: 35px;
+        background: #63b3ed;
+        border-radius: 6px 6px 0 0;
+        transition: height 0.3s, background 0.3s;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        color: #333;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .active {
+        background: #f56565 !important;
+    }
+
+    .sorted {
+        background: #68d391 !important;
+    }
+
+    .info {
+        margin-top: 15px;
+        font-weight: bold;
+        color: #555;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Sorting Visualizer</h1>
+
+    <div class="controls">
+        <input type="text" id="arrayInput" placeholder="Enter numbers (e.g. 5,3,8,1)">
+        <button class="generate" onclick="generateArray()">Generate Array</button>
+        <br>
+        <button class="bubble" onclick="bubbleSort()">Bubble Sort</button>
+        <button class="selection" onclick="selectionSort()">Selection Sort</button>
+        <button class="insertion" onclick="insertionSort()">Insertion Sort</button>
+    </div>
+
+    <div id="arrayContainer" class="array-container"></div>
+
+    <div class="info">Visualization of Sorting Algorithms</div>
+</div>
+
+<script>
+    let array = [];
+    const container = document.getElementById("arrayContainer");
+
+    function generateArray() {
+        const input = document.getElementById("arrayInput").value;
+        array = input.split(",").map(Number).filter(n => !isNaN(n));
+        renderArray();
+    }
+
+    function renderArray(activeIndices = [], sortedIndices = []) {
+        container.innerHTML = "";
+        array.forEach((value, index) => {
+            const bar = document.createElement("div");
+            bar.className = "bar";
+            bar.style.height = value * 20 + "px";
+            bar.textContent = value;
+
+            if (activeIndices.includes(index)) bar.classList.add("active");
+            if (sortedIndices.includes(index)) bar.classList.add("sorted");
+
+            container.appendChild(bar);
+        });
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function bubbleSort() {
+        for (let i = 0; i < array.length; i++) {
+            for (let j = 0; j < array.length - i - 1; j++) {
+                renderArray([j, j + 1]);
+                await sleep(400);
+                if (array[j] > array[j + 1]) {
+                    [array[j], array[j + 1]] = [array[j + 1], array[j]];
+                }
+            }
+        }
+        renderArray([], [...Array(array.length).keys()]);
+    }
+
+    async function selectionSort() {
+        for (let i = 0; i < array.length; i++) {
+            let minIndex = i;
+            for (let j = i + 1; j < array.length; j++) {
+                renderArray([minIndex, j]);
+                await sleep(400);
+                if (array[j] < array[minIndex]) minIndex = j;
+            }
+            [array[i], array[minIndex]] = [array[minIndex], array[i]];
+        }
+        renderArray([], [...Array(array.length).keys()]);
+    }
+
+    async function insertionSort() {
+        for (let i = 1; i < array.length; i++) {
+            let key = array[i];
+            let j = i - 1;
+            while (j >= 0 && array[j] > key) {
+                array[j + 1] = array[j];
+                j--;
+                renderArray([j + 1]);
+                await sleep(400);
+            }
+            array[j + 1] = key;
+        }
+        renderArray([], [...Array(array.length).keys()]);
+    }
+</script>
+
+</body>
+</html>
